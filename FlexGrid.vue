@@ -44,6 +44,10 @@
             },
             loadingAnimation: {
 
+            },
+            title: {
+                type: String,
+                default: ""
             }
 
         },
@@ -161,7 +165,7 @@
                 }
             },
             fixBodyHeight(){
-                this.$refs.rows.style.height = (this.$el.offsetHeight - this.$refs.headers.offsetHeight - (this.$refs.footer ? this.$refs.footer.offsetHeight : 0)) + 'px'
+                this.$refs.rows.style.height = ((this.$el.offsetHeight - this.$refs.headers.offsetHeight - (this.$refs.footer ? this.$refs.footer.offsetHeight : 0)) - (this.title !== '' ? 30 : 0)) + 'px'
             },
 
             fixDynamicMarginRight(){
@@ -259,6 +263,13 @@
 </script>
 <template>
 	<div class="flex-grid" :class="{striped: striped}" :style="{borderRight: showRightBorder ? '1px solid #e6e6e6' : 'none'}">
+		<div class="flex-grid-title" v-if="title !== ''">
+			<span>{{title}}</span>
+			<div class="flex-grid-close-button" v-if="closable" @click="$emit('onClose')">
+				X
+			</div>
+		</div>
+
 		<div v-if="items === null" v-bind:is="loadingAnimation" :show="true">
 
 		</div>
@@ -357,6 +368,7 @@
 				font-weight: bold;
 				word-break: break-all;
 				white-space: nowrap;
+				line-height: 18px;
 				&:not(:last-child)::after {
 					content: '';
 					margin-right: -10px;
@@ -437,6 +449,31 @@
 				padding: 5px 4px 5px 10px;
 			}
 		}
+		.flex-grid-title {
+			background-color: transparent;
+			width: 100%;
+			height: 30px;
+			clear: both;
+			span {
+				display: block;
+				padding: 0 10px;
+				line-height: 30px;
+			}
+			.flex-grid-close-button {
+				position: absolute;
+				right: 5px;
+				top: 5px;
+				color: white;
+				padding: 0px 5px;
+				border-radius: 15px;
+				line-height: 20px;
+				cursor: pointer;
+				&:hover {
+					color: #ccc;
+				}
+			}
+		}
+
 	}
 	.caret-up {
 		width: 0;
