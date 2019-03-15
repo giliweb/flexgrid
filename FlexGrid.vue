@@ -350,8 +350,8 @@
 		border-bottom: 1px solid #e6e6e6;
 
 		&.striped {
-			.flex-grid-row:nth-child(odd), .flex-grid-expanded-row:nth-child(odd) {
-				background-color: rgba(0,0,0,.05);
+			.flex-grid-row:nth-child(even), .flex-grid-expanded-row:nth-child(even) {
+				background-color: #f9f9f9;
 			}
 		}
 		.flex-grid-row.expandable:not(.expanded):hover, .flex-grid-row:not(.expandable):hover, .flex-grid-expanded-row:hover {
