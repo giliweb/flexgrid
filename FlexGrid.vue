@@ -165,7 +165,7 @@
                 }
             },
             fixBodyHeight(){
-                this.$refs.rows.style.height = ((this.$el.offsetHeight - this.$refs.headers.offsetHeight - (this.$refs.footer ? this.$refs.footer.offsetHeight : 0)) - (this.title !== '' ? 30 : 0)) + 'px'
+                this.$refs.rows.style.height = ((this.$el.offsetHeight - this.$refs.headers.offsetHeight - (this.$refs.footer ? this.$refs.footer.offsetHeight : 0)) - (this.title !== '' ? 30 : 0)) - 10 + 'px'
             },
 
             fixDynamicMarginRight(){
@@ -342,7 +342,7 @@
 	.flex-grid {
 		width: 100%;
 		position: absolute;
-		background: #fff;
+		background: #ffffff;
 		height: 100%;
 		overflow: hidden;
 		border-left: 1px solid #e6e6e6;
@@ -447,6 +447,7 @@
 				white-space: nowrap;
 				font-weight: 500;
 				padding: 5px 4px 5px 10px;
+
 			}
 		}
 		.flex-grid-title {
