@@ -245,19 +245,15 @@
 
         },
         mounted(){
-//	        this.height = this.$el.clientHeight
-//			console.log([this.$el])
-            //this.initItems(this.data)
-            //this.updateCells()
-            window.addEventListener('resize', () => {
-                if(this.columnsSameWidth){
-                    this.calculateColumnsWidth()
-                    this.updateColumnsWidth()
-                }
-                this.fixBodyHeight()
-                this.fixDynamicMarginRight()
-            })
-            //console.log(this.loadingAnimation)
+			const resizeObserver = new ResizeObserver(entries => {
+				if(this.columnsSameWidth){
+					this.calculateColumnsWidth()
+					this.updateColumnsWidth()
+				}
+				this.fixBodyHeight()
+				this.fixDynamicMarginRight()
+			});
+			resizeObserver.observe(this.$el);
         }
     }
 </script>
