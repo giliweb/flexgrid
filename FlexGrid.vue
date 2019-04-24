@@ -246,6 +246,7 @@
         },
         mounted(){
 			const resizeObserver = new ResizeObserver(entries => {
+                if(!this.$refs.rows || !this.$refs.headers) return
 				if(this.columnsSameWidth){
 					this.calculateColumnsWidth()
 					this.updateColumnsWidth()
@@ -253,7 +254,10 @@
 				this.fixBodyHeight()
 				this.fixDynamicMarginRight()
 			});
-			resizeObserver.observe(this.$el);
+			requestAnimationFrame(() => {
+                resizeObserver.observe(this.$el);
+            })
+
         }
     }
 </script>
