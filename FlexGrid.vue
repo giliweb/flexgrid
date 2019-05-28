@@ -449,7 +449,10 @@
             }
         }
         .flex-grid-row.expandable:not(.expanded):not(.flex-grid-row--bogus):hover, .flex-grid-row:not(.flex-grid-row--bogus):not(.expandable):hover, .flex-grid-expanded-row:not(.flex-grid-row--bogus):hover {
-            background-color: rgba(0,0,0,.1)!important;
+            .flex-grid-cell {
+                background-color: rgba(230,230,230,1)!important;
+            }
+
 
         }
         .flex-grid-headers {
