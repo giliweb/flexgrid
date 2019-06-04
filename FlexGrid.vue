@@ -122,9 +122,9 @@
                     //console.log(visibleColumns)
                     this.widthArray = _.map(visibleColumns, (c, k) => {
                         if(k === visibleColumns.length - 1){ // if it's the last column, i have to reduct it by the width of the scrollbar
-                            return (totalWidth / visibleColumns.length) - .1 - (this.$refs.rows.offsetWidth - this.$refs.rows.clientWidth)
+                            return (totalWidth / visibleColumns.length) - .5 - (this.$refs.rows.offsetWidth - this.$refs.rows.clientWidth)
                         } else {
-                            return (totalWidth / visibleColumns.length) - .1
+                            return (totalWidth / visibleColumns.length) - .5
                         }
 
                     })
@@ -156,21 +156,29 @@
                 })
 
                 _.forEach(rows, row => {
-                    _.forEach(row.children, (cell, k) => {
-                        if(cell.className.indexOf('flex-grid-expanded-container') !== -1){
-                            //console.log([cell])
-                            _.forEach(cell.children, r => {
-                                _.forEach(r.children, (c, j) => {
-                                    c.style.width =  (this.widthArray[j]) + 'px'
-                                    // c.style.height = `${this.$refs.headers.clientHeight}px`
-                                })
-                            })
-                        } else {
-                            cell.style.width =  (this.widthArray[k] ) + 'px'
+                    if(row.children[0]){
+                        _.forEach(row.children[0].children, (cell, k) => {
+                            let width = this.widthArray[k]
+                            if(k === row.children[0].children.length - 1) {
+                                width -=10
+                            }
+                            cell.style.width =  `${width}px`
                             // cell.style.height = `${this.$refs.headers.clientHeight}px`
-                        }
+                        })
+                    }
 
-                    })
+                    if(row.children[1]){
+                        _.forEach(row.children[1].children, (subrow, k) => {
+                            _.forEach(subrow.children, (subcell, k) => {
+                                let width = this.widthArray[k]
+                                if(k === subrow.children.length - 1) {
+                                    width -=10
+                                }
+                                subcell.style.width =  `${width}px`
+                                // cell.style.height = `${this.$refs.headers.clientHeight}px`
+                            })
+                        })
+                    }
                 })
 
                 // have to reset all heights
@@ -254,7 +262,6 @@
                         e.expandedData = this.expandedData[k]
                         e.collapsed = true
                     }
-
                 })
                 this.items = data
                 this.originalItems = data
@@ -271,9 +278,14 @@
             toggleExpandedData(row){
                 row.collapsed = !row.collapsed
                 this.fixRightBorderVisibility()
+                setTimeout(() => {
+                    this.updateBogusLines()
+                }, 500)
+
             },
             updateBogusLines(){
                 let rowsContainer = this.$refs.rows
+                if(!rowsContainer) return
                 let rows = rowsContainer.children[0]
 
                 // remove all bogus lines first
@@ -383,21 +395,24 @@
         <div ref="rows" class="flex-grid-rows">
             <div class="flex-grid-rows-scrollable-container">
                 <div class="flex-grid-row" v-for="(row, rowId) in items" :key="rowId" :class="{expanded: !row.collapsed, expandable: row.expandedData}">
-                    <div
-                        class="flex-grid-cell"
 
-                        v-for="(column, columnId) in columns"
-                        :key="columnId"
-                        v-if="!column.hidden"
-                        :style="{
+                    <div style="width: 100%;">
+                        <div
+                            class="flex-grid-cell"
+
+                            v-for="(column, columnId) in columns"
+                            :key="columnId"
+                            v-if="!column.hidden"
+                            :style="{
 								textAlign: [column.align ? column.align : 'left'],
 								paddingLeft: !row.expandedData && columnId === 1 ? '24px' : '10px',
 								backgroundColor: column.dynamicBackground ? getBackgroundColor(column.value, row[column.value]) : 'transparent'
 							}"
-                    >
-                        <span v-if="row.expandedData && columnId === 1" :class="{'caret-down': row.collapsed, 'caret-up': !row.collapsed}" @click="toggleExpandedData(row)"></span>
-                        {{columns[columnId].renderer && row[column.value] ? columns[columnId].renderer(row[column.value]) : row[column.value]}}
+                        >
+                            <span v-if="row.expandedData && columnId === 0" :class="{'caret-down': row.collapsed, 'caret-up': !row.collapsed}" @click="toggleExpandedData(row)"></span>
+                            {{columns[columnId].renderer && row[column.value] ? columns[columnId].renderer(row[column.value]) : row[column.value]}}
 
+                        </div>
                     </div>
                     <div v-if="row.expandedData" class="flex-grid-expanded-container" :class="{collapsed: row.collapsed}">
                         <div v-for="(subRow, subRowId) in row.expandedData" class="flex-grid-expanded-row" :key="subRowId">
@@ -408,6 +423,7 @@
                                 :key="columnId"
                                 :style="{
 										textAlign: [column.align ? column.align : 'left'],
+										backgroundColor: column.dynamicBackground ? getBackgroundColor(column.value, subRow[column.value]) : 'transparent'
 									}"
                             >
                                 {{subRow[column.value] ? (column.renderer ? column.renderer(subRow[column.value]) : subRow[column.value]) : ''}}
@@ -491,18 +507,29 @@
                 .flex-grid-row {
                     clear: both;
                     width: 100%;
-                    height: 30px;
+                    display: flex;
+                    flex-direction: column;
+                    > div {
+                        display: inline-flex;
+                        clear:both;
+                        width:100%;
+                    }
+                    // height: 30px;
                     &--bogus {
-                        height: 30px;
+                        height: 33px;
                     }
                     .flex-grid-expanded-container {
                         max-height: 400px;
                         overflow: hidden;
                         transition: all .2s linear;
+                        display: flex;
+                        flex-direction: column;
                         //padding-bottom: 10px;
+                        margin-top: 3px;
                         &.collapsed {
                             max-height: 0;
                             padding-bottom: 0;
+                            margin-top: 0;
                         }
                         .flex-grid-expanded-row {
                             .flex-grid-expanded-cell {
@@ -529,7 +556,7 @@
                         padding: 5px 10px;
                         word-break: break-all;
                         white-space: nowrap;
-                        height: 30px;
+                        height: 33px;
                     }
                 }
             }
@@ -541,9 +568,9 @@
             width: calc(100% + 5px);
             background-color: #e6e6e6;
             border-top: 1px solid #e0e0e0;
-            min-height: 30px;
+            min-height: 33px;
             margin-left: -5px;
-            height: 30px;
+            height: 33px;
             .flex-grid-footer-cell {
                 display: inline-block;
                 min-width: 20px;
@@ -557,7 +584,7 @@
         .flex-grid-title {
             background-color: transparent;
             width: 100%;
-            height: 30px;
+            height: 33px;
             clear: both;
             span {
                 display: block;
