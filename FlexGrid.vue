@@ -279,7 +279,7 @@
                 row.collapsed = !row.collapsed
                 this.fixRightBorderVisibility()
                 setTimeout(() => {
-                    this.updateBogusLines()
+                    this.bogusLines && this.updateBogusLines()
                 }, 500)
 
             },
@@ -355,7 +355,7 @@
             const resizeObserver = new ResizeObserver(entries => {
                 this.onAfterResize()
                 clearTimeout(this.timeoutIdentifier)
-                this.timeoutIdentifier = setTimeout(this.updateBogusLines, 1000)
+                if(this.bogusLines) this.timeoutIdentifier = setTimeout(this.updateBogusLines, 1000)
 
             });
             requestAnimationFrame(() => {
