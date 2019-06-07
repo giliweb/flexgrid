@@ -431,7 +431,9 @@
 										backgroundColor: column.dynamicBackground ? getBackgroundColor(column.value, subRow[column.value]) : 'transparent'
 									}"
                             >
-                                {{subRow[column.value] ? (column.renderer ? column.renderer(subRow[column.value]) : subRow[column.value]) : ''}}
+                                <span v-html="subRow[column.value] ? (column.renderer ? column.renderer(subRow[column.value], subRow) : subRow[column.value]) : ''">
+
+                                </span>
                             </div>
                         </div>
                     </div>
