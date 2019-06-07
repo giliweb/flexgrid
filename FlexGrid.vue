@@ -409,9 +409,14 @@
 								backgroundColor: column.dynamicBackground ? getBackgroundColor(column.value, row[column.value]) : 'transparent'
 							}"
                         >
-                            <span v-if="row.expandedData && columnId === 0" :class="{'caret-down': row.collapsed, 'caret-up': !row.collapsed}" @click="toggleExpandedData(row)"></span>
-                            {{columns[columnId].renderer && row[column.value] ? columns[columnId].renderer(row[column.value]) : row[column.value]}}
+                            <span
+                                v-if="row.expandedData && columnId === 0"
+                                :class="{'caret-down': row.collapsed, 'caret-up': !row.collapsed}"
+                                @click="toggleExpandedData(row)"
+                            ></span>
+                            <span v-html="columns[columnId].renderer && row[column.value] ? columns[columnId].renderer(row[column.value], row) : row[column.value]">
 
+                            </span>
                         </div>
                     </div>
                     <div v-if="row.expandedData" class="flex-grid-expanded-container" :class="{collapsed: row.collapsed}">
