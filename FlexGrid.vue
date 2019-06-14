@@ -394,7 +394,16 @@
         </div>
         <div ref="rows" class="flex-grid-rows">
             <div class="flex-grid-rows-scrollable-container">
-                <div class="flex-grid-row" v-for="(row, rowId) in items" :key="rowId" :class="{expanded: !row.collapsed, expandable: row.expandedData}">
+                <div class="flex-grid-row"
+                     v-for="(row, rowId) in items"
+                     :key="rowId"
+                     :class="{
+                        expanded: !row.collapsed,
+                        expandable: row.expandedData,
+                        'odd-children': row.expandedData && row.expandedData.length % 2 !== 0,
+                        'even-children': row.expandedData && row.expandedData.length % 2 === 0,
+                        }
+                ">
 
                     <div style="width: 100%;">
                         <div
@@ -411,7 +420,7 @@
                         >
                             <span
                                 v-if="row.expandedData && columnId === 0"
-                                :class="{'caret-down': row.collapsed, 'caret-up': !row.collapsed}"
+                                :class="{'caret-right': row.collapsed, 'caret-down': !row.collapsed}"
                                 @click="toggleExpandedData(row)"
                             ></span>
                             <span v-html="columns[columnId].renderer && row[column.value] ? columns[columnId].renderer(row[column.value], row) : row[column.value]">
@@ -467,17 +476,162 @@
         border-bottom: 1px solid #e6e6e6;
 
         &.striped {
-            .flex-grid-row:nth-child(even), .flex-grid-expanded-row:nth-child(even) {
-                background-color: #f9f9f9;
+
+            /*.flex-grid-row:nth-child(even) {*/
+            /*    background-color: #f9f9f9;*/
+            /*    .flex-grid-expanded-row:nth-child(odd) {*/
+            /*        background-color: #ffffff;*/
+            /*    }*/
+            /*    .flex-grid-expanded-row:nth-child(even) {*/
+            /*        background-color: #f9f9f9;*/
+            /*    }*/
+            /*}*/
+
+            /*.flex-grid-row:nth-child(odd) {*/
+            /*    background-color: #ffffff;*/
+            /*    .flex-grid-expanded-row:nth-child(odd) {*/
+            /*        background-color: #f9f9f9;*/
+            /*    }*/
+            /*    .flex-grid-expanded-row:nth-child(even) {*/
+            /*        background-color: #ffffff;*/
+            /*    }*/
+            /*}*/
+            .flex-grid-row {
+
+                &.expandable {
+                    &:nth-child(odd) {
+                        background-color: #f9f9f9 !important;
+                        &+ .flex-grid-row {
+                            .flex-grid-expanded-row:nth-child(even) {
+                                background-color: #ffffff!important;
+                            }
+                            .flex-grid-expanded-row:nth-child(odd) {
+                                background-color: #f9f9f9!important;
+                            }
+                        }
+                    }
+                    &:nth-child(even) {
+                        background-color: #ffffff !important;
+                    }
+                    &.expanded {
+                        &.odd-children {
+                            &:nth-child(odd) {
+                                background-color: #f9f9f9 !important;
+                                .flex-grid-expanded-row:nth-child(even) {
+                                    background-color: #ffffff!important;
+                                }
+                                .flex-grid-expanded-row:nth-child(odd) {
+                                    background-color: #f9f9f9!important;
+                                }
+                                &+ .flex-grid-row:nth-child(odd) {
+                                    background-color: #f9f9f9!important;
+                                    .flex-grid-expanded-row:nth-child(even) {
+                                        background-color: #f9f9f9!important;
+                                    }
+                                    .flex-grid-expanded-row:nth-child(odd) {
+                                        background-color: #ffffff!important;
+                                    }
+                                }
+                                &+ .flex-grid-row:nth-child(even) {
+                                    background-color: #ffffff!important;
+                                    .flex-grid-expanded-row:nth-child(even) {
+                                        background-color: #ffffff!important;
+                                    }
+                                    .flex-grid-expanded-row:nth-child(odd) {
+                                        background-color: #f9f9f9!important;
+                                    }
+                                }
+                            }
+                            &:nth-child(even) {
+                                background-color: #ffffff !important;
+                                &+ .flex-grid-row:nth-child(even) {
+                                    background-color: #f9f9f9!important;
+                                    .flex-grid-expanded-row:nth-child(even) {
+                                        background-color: #f9f9f9!important;
+                                    }
+                                    .flex-grid-expanded-row:nth-child(odd) {
+                                        background-color: #ffffff!important;
+                                    }
+                                }
+                                &+ .flex-grid-row:nth-child(odd) {
+                                    background-color: #ffffff!important;
+                                    .flex-grid-expanded-row:nth-child(even) {
+                                        background-color: #ffffff!important;
+                                    }
+                                    .flex-grid-expanded-row:nth-child(odd) {
+                                        background-color: #f9f9f9!important;
+                                    }
+                                }
+                            }
+
+                        }
+                        &.even-children {
+                            &:nth-child(odd) {
+                                background-color: #f9f9f9!important;
+                                .flex-grid-expanded-row:nth-child(odd) {
+                                    background-color: #ffffff!important;
+                                }
+                                .flex-grid-expanded-row:nth-child(even) {
+                                    background-color: #f9f9f9!important;
+                                }
+                                &+ .flex-grid-row:nth-child(even) {
+                                    background-color: #ffffff!important;
+                                    .flex-grid-expanded-row:nth-child(even) {
+                                        background-color: #ffffff!important;
+                                    }
+                                    .flex-grid-expanded-row:nth-child(odd) {
+                                        background-color: #f9f9f9!important;
+                                    }
+                                }
+                                &+ .flex-grid-row:nth-child(odd) {
+                                    background-color: #f9f9f9!important;
+                                    .flex-grid-expanded-row:nth-child(even) {
+                                        background-color: #f9f9f9!important;
+                                    }
+                                    .flex-grid-expanded-row:nth-child(odd) {
+                                        background-color: #ffffff!important;
+                                    }
+                                }
+                            }
+                            &:nth-child(even) {
+                                &+ .flex-grid-row:nth-child(odd) {
+                                    background-color: #ffffff!important;
+                                    .flex-grid-expanded-row:nth-child(even) {
+                                        background-color: #ffffff!important;
+                                    }
+                                    .flex-grid-expanded-row:nth-child(odd) {
+                                        background-color: #f9f9f9!important;
+                                    }
+                                }
+                                &+ .flex-grid-row:nth-child(even) {
+                                    background-color: #f9f9f9!important;
+                                    .flex-grid-expanded-row:nth-child(even) {
+                                        background-color: #f9f9f9!important;
+                                    }
+                                    .flex-grid-expanded-row:nth-child(odd) {
+                                        background-color: #ffffff!important;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
             }
         }
-        .flex-grid-row.expandable:not(.expanded):not(.flex-grid-row--bogus):hover, .flex-grid-row:not(.flex-grid-row--bogus):not(.expandable):hover, .flex-grid-expanded-row:not(.flex-grid-row--bogus):hover {
+        .flex-grid-row.expandable:not(.expanded):not(.flex-grid-row--bogus):hover,
+        .flex-grid-row:not(.flex-grid-row--bogus):not(.expandable):hover,
+        .flex-grid-expanded-row:not(.flex-grid-row--bogus):hover {
+            background-color: rgba(230,230,230,1)!important;
             .flex-grid-cell {
                 background-color: rgba(230,230,230,1)!important;
             }
-
-
         }
+
+
+
+
+
         .flex-grid-headers {
             background-color: #e6e6e6;
             border-bottom: 1px solid #e0e0e0;
@@ -532,7 +686,7 @@
                         display: flex;
                         flex-direction: column;
                         //padding-bottom: 10px;
-                        margin-top: 3px;
+                        margin-top: 0;
                         &.collapsed {
                             max-height: 0;
                             padding-bottom: 0;
@@ -623,6 +777,19 @@
         vertical-align: middle;
         display: inline-block;
         cursor: pointer;
+        margin-right: 5px;
+    }
+
+    .caret-right {
+        width: 0;
+        height: 0;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid black;
+        vertical-align: middle;
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 5px;
     }
 
     .caret-down {
@@ -634,5 +801,6 @@
         vertical-align: middle;
         display: inline-block;
         cursor: pointer;
+        margin-right: 5px;
     }
 </style>
