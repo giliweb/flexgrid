@@ -330,11 +330,12 @@
                 this.fixBodyHeight()
                 this.fixDynamicMarginRight()
             },
-            getBackgroundColor(fieldName, value){
+            getBackgroundColor(fieldName, value, baseColor){
                 // console.log(value, this.dynamicBackgroundTotals[fieldName])
                 let factor = (value / this.dynamicBackgroundTotals[fieldName])
                 factor = Math.min(factor, .3)
-                return Color('white').darken(factor).rgbString()
+                baseColor = baseColor || 'white'
+                return Color(baseColor).darken(factor).rgbString()
             }
         },
         watch: {
@@ -415,7 +416,7 @@
                             :style="{
 								textAlign: [column.align ? column.align : 'left'],
 								paddingLeft: !row.expandedData && columnId === 1 ? '24px' : '10px',
-								backgroundColor: column.dynamicBackground ? getBackgroundColor(column.value, row[column.value]) : 'transparent'
+								backgroundColor: column.dynamicBackground ? getBackgroundColor(column.value, row[column.value], column.dynamicBackgroundColor) : 'transparent'
 							}"
                         >
                             <span
@@ -437,7 +438,7 @@
                                 :key="columnId"
                                 :style="{
 										textAlign: [column.align ? column.align : 'left'],
-										backgroundColor: column.dynamicBackground ? getBackgroundColor(column.value, subRow[column.value]) : 'transparent'
+										backgroundColor: column.dynamicBackground ? getBackgroundColor(column.value, subRow[column.value], column.dynamicBackgroundColor) : 'transparent'
 									}"
                             >
                                 <span v-html="subRow[column.value] ? (column.renderer ? column.renderer(subRow[column.value], subRow) : subRow[column.value]) : ''">
